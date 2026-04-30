@@ -151,19 +151,22 @@ class MenuSeleccionSalaMixin:
                 "texto": "VOLVER",
                 "archivo": "boton_volver.png",
                 "accion": lambda: controladores.Mostrar_seccion(self, self.menu_nombre_usuario),
-                "x_inc": 0.3
+                "x_inc": 0.554,
+                "y_inc": 1
             },
             {
                 "texto": "ACTUALIZAR",
-                "archivo": "b_unirse_sala.png", # Este es el que se veía diferente
+                "archivo": "boton_actualizar.png", 
                 "accion": lambda: self.actualizar_lista_salas(),
-                "x_inc": 0.75
+                "x_inc": 1.2,
+                "y_inc": 0.1
             }
         ]
 
         for datos in datos_botones:
             # 2. Crear el botón base
             x_relativa = x_base * datos["x_inc"]
+            y_relativa = y_relativa * datos["y_inc"]
             boton = menu.crear_elemento(
                 x=x_relativa,
                 y=y_relativa,

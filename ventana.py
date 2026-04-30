@@ -99,6 +99,22 @@ class Ventana(
         # volumen maestro
         self.master_volume = 1
 
+        self.cursor_base = pygame.cursors.Cursor(pygame.SYSTEM_CURSOR_ARROW)
+        self.cursor_mano = pygame.cursors.Cursor(pygame.SYSTEM_CURSOR_HAND)
+        self.cursor_actual = self.cursor_base
+
+
+        # # Cursores del mouse para interfaz
+        # try:
+        #     self.cursor_default = pygame.cursors.Cursor(pygame.SYSTEM_CURSOR_ARROW)
+        #     self.cursor_hand = pygame.cursors.Cursor(pygame.SYSTEM_CURSOR_HAND)
+        #     self.cursor_actual = self.cursor_default
+        #     pygame.mouse.set_cursor(self.cursor_actual)
+        # except Exception:
+        #     self.cursor_default = None
+        #     self.cursor_hand = None
+        #     self.cursor_actual = None
+
         # Crear botón silenciar
         try:
             self.crear_boton_silenciar()
@@ -435,6 +451,63 @@ class Ventana(
         if hasattr(self, 'mesa') and self.mesa and hasattr(self.mesa, 'menus_activos'):
             for menu in self.mesa.menus_activos:
                 menu.verificar_hovers(posicion_raton)
+
+        self.actualizar_cursor()
+    
+    #Cambia el Cursor en base al Hover
+    def actualizar_cursor(self):
+        if not self.cursor_base or not self.cursor_mano:
+            return
+        
+        hover = False
+
+        #Hover en el Boton Jugar
+        if getattr(self, 'boton_jugar', None) and getattr(self.boton_jugar, 'esta_hover', False):
+            hover = True
+
+        #Hover en el Boton de Muteo
+        if getattr(self, 'boton_silenciar', None) and getattr(self.boton_silenciar, 'esta_hover', False):
+            hover = True
+
+        for menu in self.menus_principales():
+            if menu and self.menu_botones_hover(menu):
+                hover = True
+                break
+        
+        # Hover en Botones de Menus Condicionales
+        if not hover:
+            for menu_name in self.menus_condicionales():
+                if hasattr(self, menu_name):
+                    menu = getattr(self, menu_name)
+                    if self.menu_botones_hover(menu):
+                        hover = True
+                        break
+        
+        #Hover en Botones de la Mesa
+        if not hover and hasattr(self, 'mesa') and self.mesa and hasattr(self.mesa, 'menus_activos'):
+            for menu in self.mesa.menus_activos:
+                if self.menu_botones_hover(menu):
+                    hover = True
+                    break
+
+        nuevo_cursor = self.cursor_mano if hover else self.cursor_base
+        if nuevo_cursor != self.cursor_actual:
+            try:
+                pygame.mouse.set_cursor(nuevo_cursor)
+                self.cursor_actual = nuevo_cursor
+            except Exception:
+                pass
+
+        
+    #Determina si un menu tiene algun boton que tenga hover asignado
+    def menu_botones_hover(self, menu):
+        if not menu or not getattr(menu, 'visible', False):
+            return False
+        for boton in getattr(menu, 'botones', []):
+            if isinstance(boton, Boton) and getattr(boton, 'esta_hover', False) and not getattr(boton, 'deshabilitado', False):
+                return True
+        return False
+
 
     def ejecutar_dibujado(self):
         # SUSTITUCIÓN DE: self.pantalla.fill(constantes.FONDO_VENTANA)
