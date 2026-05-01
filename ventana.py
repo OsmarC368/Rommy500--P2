@@ -103,18 +103,6 @@ class Ventana(
         self.cursor_mano = pygame.cursors.Cursor(pygame.SYSTEM_CURSOR_HAND)
         self.cursor_actual = self.cursor_base
 
-
-        # # Cursores del mouse para interfaz
-        # try:
-        #     self.cursor_default = pygame.cursors.Cursor(pygame.SYSTEM_CURSOR_ARROW)
-        #     self.cursor_hand = pygame.cursors.Cursor(pygame.SYSTEM_CURSOR_HAND)
-        #     self.cursor_actual = self.cursor_default
-        #     pygame.mouse.set_cursor(self.cursor_actual)
-        # except Exception:
-        #     self.cursor_default = None
-        #     self.cursor_hand = None
-        #     self.cursor_actual = None
-
         # Crear botón silenciar
         try:
             self.crear_boton_silenciar()
