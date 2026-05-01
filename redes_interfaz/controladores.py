@@ -432,6 +432,16 @@ def mostrar_mesa(un_juego,clase_mesa_interfaz,datos):
         except Exception as e:
             print(f"ERROR actualizando mesa existente: {e}")
 
+        # ── BOTÓN ORDENAR MANO (nueva ronda) ─────────────────────────────────
+        # Se recrea en cada nueva ronda porque manejar_partida() limpia y
+        # reconstruye los botones de la mesa, eliminando el botón anterior.
+        try:
+            clase_mesa_interfaz.crear_boton_ordenar(un_juego.mesa)
+            print("DEBUG: Botón de ordenamiento de mano recreado para nueva ronda")
+        except Exception as e:
+            print(f"WARN: No se pudo recrear el botón de ordenamiento: {e}")
+        
+        # ─────────────────────────────────────────────────────────────────────
     # Mostrar la sección de la mesa (ya sea nueva o actualizada)
     #==========Fin Jesua===========
     # Detener música de menú si la ventana tiene ese control
