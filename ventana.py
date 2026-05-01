@@ -49,6 +49,9 @@ class Ventana(
         self.pantalla = pygame.display.set_mode((constantes.ANCHO_VENTANA,constantes.ALTO_VENTANA))
         self.cartel_alerta = CartelAlerta(self.pantalla, "", 0, 0)
         pygame.display.set_caption("Rummy500")
+        self.img_fondo_mesa = pygame.image.load("./assets/Imagenes/fondos/fondo_mesa.png").convert()
+# Forzamos que la imagen mida lo mismo que la ventana
+        self.img_fondo_mesa = pygame.transform.scale(self.img_fondo_mesa, (constantes.ANCHO_VENTANA, constantes.ALTO_VENTANA))
         # Datos de juego
         self.lista_elementos = {
             "nombre_creador": "",
@@ -498,13 +501,18 @@ class Ventana(
 
 
     def ejecutar_dibujado(self):
-        # SUSTITUCIÓN DE: self.pantalla.fill(constantes.FONDO_VENTANA)
-        # Lógica para decidir qué fondo dibujar según la sección actual
+        # 1. Dibujamos el fondo (Ya está escalado, así que solo usamos (0,0))
         if hasattr(self, 'mesa') and self.mesa and getattr(self.mesa, 'visible', False):
-            self.pantalla.blit(self.img_fondo_mesa, (0, 0))
+           self.pantalla.blit(self.img_fondo_mesa, (0, 0))
+        # 2. Dibujamos la lógica de la mesa (cartas, botones)
+           self.mesa.dibujar_menu() 
         else:
-            self.pantalla.blit(self.img_fondo_menus, (0, 0))
+        # Fondo para cuando no estás jugando
+           self.pantalla.blit(self.img_fondo_menus, (0, 0))
+        if hasattr(self, 'menu_inicio') and self.menu_inicio:
+            self.menu_inicio.dibujar_menu()
         
+        # Mantenemos el resto de tu estructura original
         self.boton_jugar.dibujar()
         
         menus = self.menus_principales()

@@ -17,8 +17,8 @@ class CreacionMesaMixin:
             constantes.ALTO_MENU_MESA,
             x_menu,
             y_menu,
-            constantes.ELEMENTO_FONDO_TERCIARIO,
-            constantes.ELEMENTO_BORDE_TERCIARIO,
+            None,
+            None,
             constantes.BORDE_PRONUNCIADO,
             constantes.REDONDEO_NORMAL
         )

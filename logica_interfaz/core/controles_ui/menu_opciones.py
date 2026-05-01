@@ -1,5 +1,5 @@
 """Módulo interno para sistema de menú de opciones"""
-
+import pygame
 from logica_interfaz.archivo_de_importaciones import importar_desde_carpeta
 from recursos_graficos import constantes
 from recursos_graficos.elementos_de_interfaz_de_usuario import Boton
@@ -11,14 +11,21 @@ BotonLogoMenu = importar_desde_carpeta("elementos_de_interfaz_de_usuario.py","Bo
 
 class MenuOpcionesMixin:
     """Mixin con métodos para sistema de menú de opciones"""
-    
     def crear_boton_menu(self):
         """Crea el botón de menú en la esquina superior derecha"""
-        ancho_boton = 40
-        alto_boton = 30
+        ancho_boton = 90
+        alto_boton = 70
         
         x = constantes.ANCHO_MENU_MESA - ancho_boton - 5
         y = 10
+        
+        # 1. Cargar la imagen que subiste
+        # Asegúrate de que el archivo .jpg esté en la carpeta principal
+        imagen_aux = pygame.image.load("./assets/Imagenes/botones/menu.png")
+        
+        # 2. Ajustarla al tamaño del botón
+        imagen_final = pygame.transform.smoothscale(imagen_aux, (ancho_boton - 10, alto_boton - 10))
+
         boton = BotonLogoMenu(
             un_juego=self.un_juego,
             x=x, y=y,
@@ -29,7 +36,15 @@ class MenuOpcionesMixin:
             deshabilitado=False,
             accion=lambda: self.mostrar_menu_opciones(),
         )
+        
+        # 3. Guardar la imagen en el objeto botón
+        boton.imagen_menu = imagen_final
+        
+        # ESTA ES LA LÍNEA DEL ERROR: Debe tener exactamente la misma 
+        # cantidad de espacios que la línea de arriba (boton.imagen_menu...)
         return boton
+    
+    
     
     def mostrar_menu_opciones(self):
         """Muestra el menú de opciones"""

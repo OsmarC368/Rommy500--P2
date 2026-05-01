@@ -1329,34 +1329,19 @@ class BotonLogoMenu(Boton):
 
     def dibujar(self):
         if not self.visible:
-            return
+           return
 
-        # Dibujar fondo y borde (comportamiento normal del botón)
-        super().dibujar()
-
-        # Calcular posición de las rayas (centradas)
-        margen_vertical = self.alto * 0.2
-        ancho_rayas = self.ancho * 0.6
-        x_rayas = self.rect.centerx - ancho_rayas / 2
-        espacio_total = self.alto - (2 * margen_vertical)
-        espacio_entre_rayas = espacio_total / 3
-
-        # Determinar color de las rayas según el estado
-        if self.deshabilitado:
-            color_raya = (150, 150, 150)  # Gris para deshabilitado
-        elif self.presionado:
-            color_raya = self.color_rayas_clicado
-        elif self.esta_hover:
-            color_raya = self.color_rayas_hover
+    # Si tienes la imagen cargada en self.imagen_menu
+        if hasattr(self, 'imagen_menu') and self.imagen_menu:
+        # Centrar la imagen en el botón
+           rect_img = self.imagen_menu.get_rect(center=self.rect.center)
+           self.pantalla.blit(self.imagen_menu, rect_img)
         else:
-            color_raya = self.color_rayas
+        # Fallback por si la imagen no carga, dibuja el fondo normal
+           super().dibujar()
 
-        # Dibujar las tres rayas
-        for i in range(3):
-            y_raya = self.rect.y + margen_vertical + (i * espacio_entre_rayas)
-            inicio = (x_rayas, y_raya)
-            fin = (x_rayas + ancho_rayas, y_raya)
-            pygame.draw.line(self.pantalla, color_raya, inicio, fin, self.grosor_raya)
+        
+        
 
     def verificar_hover(self, posicion_raton):
         """Actualiza el estado de hover y devuelve si cambió"""
