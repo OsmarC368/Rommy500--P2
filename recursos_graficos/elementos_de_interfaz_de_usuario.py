@@ -302,12 +302,11 @@ class Elemento_texto:
 
 class Boton(Elemento_texto):
     def __init__(self, *args, color_hover=None, color_borde_hover=None, 
-                 color_borde_clicado=None, accion=None,deshabilitado=None, **kwargs):
+                 color_borde_clicado=None, accion=None, deshabilitado=None, 
+                 ruta_imagen_fondo=None, **kwargs):
         
-        # Pasar todos los argumentos posicionales y nombrados al padre
         super().__init__(*args, **kwargs)
         
-        # Atributos específicos de Boton
         self.deshabilitado = deshabilitado
         self.color_hover = color_hover
         self.color_borde_hover = color_borde_hover
@@ -315,9 +314,44 @@ class Boton(Elemento_texto):
         self.accion = accion
         self.presionado = False
         
-        # SOLO AGREGANDO ESTOS DOS ATRIBUTOS
         self.color_texto_original = self.color_texto
         self.color_borde_original = self.color_borde
+
+        self.imagen_fondo = None
+        if ruta_imagen_fondo:
+            try:
+                ruta_img = importar_desde_carpeta(
+                    nombre_archivo=ruta_imagen_fondo,
+                    nombre_carpeta="assets"
+                )
+                img = pygame.image.load(ruta_img).convert_alpha()
+                self.imagen_fondo = pygame.transform.smoothscale(img, (self.ancho, self.alto))
+                
+                self.color_actual = None
+                self.color = None
+                self.grosor_borde = 0
+                self.color_borde_actual = None
+            except Exception as e:
+                print(f"Error cargando imagen de fondo para botón: {e}")
+        # ============================================
+
+    def dibujar(self):
+        if not self.visible:
+            return
+
+        if self.imagen_fondo:
+            self.pantalla.blit(self.imagen_fondo, self.rect)
+            
+            if self.deshabilitado:
+                superposicion = pygame.Surface((self.ancho, self.alto), pygame.SRCALPHA)
+                superposicion.fill((100, 100, 100, 150)) # Oscurecer
+                self.pantalla.blit(superposicion, self.rect.topleft)
+            elif self.esta_hover:
+                superposicion = pygame.Surface((self.ancho, self.alto), pygame.SRCALPHA)
+                superposicion.fill((255, 255, 255, 40)) # Brillo ligero
+                self.pantalla.blit(superposicion, self.rect.topleft)
+
+        super().dibujar()
 
     def ocultar(self):
         return super().ocultar()
