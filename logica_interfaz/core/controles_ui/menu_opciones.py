@@ -67,7 +67,7 @@ class MenuOpcionesMixin:
         
         pygame.draw.rect(
             fondo_transparente, 
-            (0, 0, 0, 180),
+            (0, 0, 0, 115),
             fondo_transparente.get_rect(), 
             border_radius=constantes.REDONDEO_NORMAL
         )
