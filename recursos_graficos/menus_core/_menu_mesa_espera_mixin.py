@@ -4,17 +4,14 @@ from recursos_graficos import constantes
 from recursos_graficos.menu import Menu
 from recursos_graficos.elementos_de_interfaz_de_usuario import Elemento_texto
 from redes_interfaz import controladores
-
+import pygame
+from logica_interfaz.archivo_de_importaciones import importar_desde_carpeta
 
 class MenuMesaEsperaMixin:
     """Mixin con métodos para el menú de sala de espera (lobby)"""
     
     def Menu_mesa_espera(self):
-        """Crea el menú de espera mientras los jugadores se conectan
-        
-        Returns:
-            Menu: Instancia del menú de mesa de espera
-        """
+        """Crea el menú de espera mientras los jugadores se conectan"""
         x_menu, y_menu = self.centrar(
             constantes.ANCHO_MENU_MESA_ESPERA,
             constantes.ALTO_MENU_MESA_ESPERA
@@ -26,11 +23,27 @@ class MenuMesaEsperaMixin:
             constantes.ALTO_MENU_MESA_ESPERA,
             x_menu,
             y_menu,
-            constantes.ELEMENTO_FONDO_TERCIARIO,
+            None,
             constantes.ELEMENTO_BORDE_TERCIARIO,
             constantes.BORDE_PRONUNCIADO,
             constantes.REDONDEO_NORMAL
         )
+        
+        try:
+            ruta_fondo = importar_desde_carpeta(
+                nombre_archivo="Imagenes/fondos/fondo_lampara.png",
+                nombre_carpeta="assets"
+            )
+            img_fondo = pygame.image.load(ruta_fondo).convert_alpha()
+            
+            img_fondo = pygame.transform.smoothscale(
+                img_fondo, 
+                (int(constantes.ANCHO_MENU_MESA_ESPERA), int(constantes.ALTO_MENU_MESA_ESPERA))
+            )
+            
+            menu_mesa_espera.agregar_imagen(img_fondo, (0, 0), 1)
+        except Exception as e:
+            print(f"Error cargando fondo_lampara.png: {e}")
         
         elemento_texto = self.crear_elementos_mesa_espera(menu_mesa_espera)
         
@@ -63,8 +76,8 @@ class MenuMesaEsperaMixin:
             alto=alto_txt_esperando,
             tamaño_fuente=constantes.F_GRANDE,
             fuente=constantes.FUENTE_TITULO,
-            color=constantes.ELEMENTO_FONDO_TERCIARIO,
-            radio_borde=constantes.REDONDEO_NORMAL,
+            color=None,
+            radio_borde=0,
             color_texto=(187, 165, 113),
             color_borde=constantes.SIN_COLOR,
             grosor_borde=constantes.SIN_BORDE,
