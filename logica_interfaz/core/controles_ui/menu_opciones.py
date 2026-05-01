@@ -45,6 +45,7 @@ class MenuOpcionesMixin:
 
     def crear_menu_opciones(self):
         """Crea el menú de opciones"""
+        import pygame
         ancho_menu = constantes.ANCHO_VENTANA * 0.6
         alto_menu = constantes.ALTO_VENTANA * 0.8
         
@@ -62,15 +63,25 @@ class MenuOpcionesMixin:
             constantes.REDONDEO_NORMAL
         )
         
+        fondo_transparente = pygame.Surface((int(ancho_menu), int(alto_menu)), pygame.SRCALPHA)
+        
+        pygame.draw.rect(
+            fondo_transparente, 
+            (0, 0, 0, 115),
+            fondo_transparente.get_rect(), 
+            border_radius=constantes.REDONDEO_NORMAL
+        )
+        
+        self.menu_opciones.agregar_imagen(fondo_transparente, (0, 0), 1)        
         self.crear_botones_menu_opciones()
-        # Agregar botón silenciar dentro del menú de opciones (mutear durante la partida)
+        
         try:
             self.crear_boton_silenciar_menu()
         except Exception:
             pass
+            
         self.un_juego.mesa_opciones = self.menu_opciones
         self.un_juego.mesa_opciones.mostrar()
-        # self.menus_activos.append(self.menu_opciones)
         print(f"DEBUG: Menú de opciones creado con {len(self.menu_opciones.botones)} botones")
 
     def crear_botones_menu_opciones(self):
@@ -98,18 +109,19 @@ class MenuOpcionesMixin:
                 alto=alto_boton,
                 x=x_base,
                 y=y_pos,
-                tamaño_fuente=constantes.F_PEQUENA,
+                tamaño_fuente=24,
                 fuente=constantes.FUENTE_ESTANDAR,
                 color=constantes.ELEMENTO_FONDO_PRINCIPAL,
                 radio_borde=constantes.REDONDEO_NORMAL,
-                color_texto=constantes.COLOR_TEXTO_PRINCIPAL,
+                color_texto=(218, 165, 32),
                 color_borde=constantes.ELEMENTO_BORDE_SECUNDARIO,
                 grosor_borde=constantes.BORDE_INTERMEDIO,
                 color_borde_hover=constantes.ELEMENTO_HOVER_PRINCIPAL,
                 color_borde_clicado=constantes.ELEMENTO_CLICADO_PRINCIPAL,
                 grupo=[],
                 valor=texto.lower().replace(" ", "_"),
-                accion=accion
+                accion=accion,
+                ruta_imagen_fondo="Imagenes/botones/boton_base.png"
             )
             
             self.menu_opciones.botones.append(boton)
